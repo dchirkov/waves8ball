@@ -4,7 +4,7 @@ import { nodeInteraction } from "@waves/waves-transactions";
 
 
 const nodeUrl = 'https://nodes-testnet.wavesnodes.com';
-const ballAddress = '3MqDhjXwvCbFCpkA3o6BQkTWtD59267HhXA';
+const ballAddress = '3MuzAr5VCVm6iuzGuji5nRiW2TMb5YiwsT4';
 
 const signer = new Signer({NODE_URL: nodeUrl});
 const provider = new Provider('https://testnet.waves.exchange/signer/')
