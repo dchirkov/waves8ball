@@ -1,0 +1,50 @@
+{-# STDLIB_VERSION 3 #-}
+{-# CONTENT_TYPE DAPP #-}
+{-# SCRIPT_TYPE ACCOUNT #-}
+
+let answersCount = 20
+let answers = 
+    ["Бесспорно",
+    "Предрешено",
+    "Никаких сомнений",
+    "Определённо да",
+    "Можешь быть уверен в этом",
+    "Мне кажется — да",
+    "Вероятнее всего",
+    "Хорошие перспективы",
+    "Да",
+    "Знаки говорят — да",
+    "Пока не ясно, попробуй снова",
+    "Спроси позже",
+    "Лучше не рассказывать",
+    "Сейчас нельзя предсказать",
+    "Сконцентрируйся и спроси опять",
+    "Даже не думай",
+    "Мой ответ — нет",
+    "По моим данным — нет",
+    "Перспективы не очень хорошие",
+    "Весьма сомнительно"]
+
+func getAnswer(question: String, previousAnswer: String) = {
+    let hash = sha256(toBytes(question + previousAnswer))
+    let index = toInt(hash)
+    answers[index % answersCount]
+}
+
+func getPreviousAnswer(address: String) = {
+    match getString(this, address + "_a") {
+        case a: String => a
+        case _ => address
+    }
+}
+
+@Callable(i)
+func tellme(question: String) = {
+    let callerAddress = toBase58String(i.caller.bytes)
+    let answer = getAnswer(question, getPreviousAnswer(callerAddress))
+
+    WriteSet([
+        DataEntry(callerAddress + "_q", question),
+        DataEntry(callerAddress + "_a", answer)
+        ])
+}
